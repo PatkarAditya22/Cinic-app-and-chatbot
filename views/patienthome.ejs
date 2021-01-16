@@ -1,0 +1,48 @@
+<% include partials/header %>
+
+<style>
+    fieldset {
+        padding-left: 1%;
+        padding-right: 1%;
+    }
+    table, th, td {
+    border: 1px solid black;
+    text-align: center;
+    }
+    .ho:hover {
+        background-color: #e3f0ec;;
+    }
+</style>
+<div class="section lb">
+    <div class="container">
+        <br>
+        <table class="table table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>SR NO</th>
+                    <th>Doctor Name</th>
+                    <th>Contact Number</th>
+                    <th>Date</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% patient.appointments.reverse();var srno=1;
+        patient.appointments.forEach(function(appointment){ %>
+                <tr class="ho">
+                    <% var month = appointment.appointmentdate.getMonth() +1;%>
+                    <td><%= srno++ %></td>
+                    <td><%= appointment.doctorname.toUpperCase() %></td>
+                    <td><%= appointment.doctorcn %></td>
+                    <td><%= appointment.appointmentdate.getDate() + "/" + month + "/" + appointment.appointmentdate.getFullYear() %>
+                    </td>
+                    <td><a href="/patienthome/<%= appointment._id %>" class="btn btn-primary">View Details</a></td>
+                </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<% include partials/footer %>
+

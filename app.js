@@ -1216,7 +1216,6 @@ app.post('/chatBot', express.json(), (req, res) => {
 			var country = agent.context.get('country').parameters['country'];
 			var response = await fetch(`https://api.covid19api.com/live/country/${country}`);
 			response = await response.json();
-			console.log(response);
 			var payloadData = {
 				"richContent": [
 					[{
@@ -1229,6 +1228,14 @@ app.post('/chatBot', express.json(), (req, res) => {
 					}]
 				]
 			}
+			console.log({
+				"type": response[0].Country,
+				"title": "Description title",
+				"text": [
+					`Confirmed Cases in ${country} ${response.reduce((Confirmed,province)=>Confirmed+province.Confirmed,0)}`,
+					`Confirmed Cases in ${country} ${response.reduce((Deaths,province)=>Deaths+province.Deaths,0)}`
+				]
+			});
 		} catch (err) {
 			console.log(err);
 			var payloadData = {

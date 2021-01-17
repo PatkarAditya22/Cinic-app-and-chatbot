@@ -1226,8 +1226,8 @@ app.post('/chatBot', express.json(), (req, res) => {
 						"text": [
 							`Confirmed Cases in ${country} ${response.reduce((Confirmed,province)=>Confirmed+province.Confirmed,0)}`,
 							`Confirmed Deaths in ${country} ${response.reduce((Deaths,province)=>Deaths+province.Deaths,0)}`,
-							`Confirmed Recovered in ${country} ${response.reduce((Recovered,province)=>Recovered+province.Deaths,0)}`,
-							`Confirmed Active in ${country} ${response.reduce((Active,province)=>Active+province.Deaths,0)}`,
+							`Confirmed Recovered in ${country} ${response.reduce((Recovered,province)=>Recovered+province.Recovered,0)}`,
+							`Confirmed Active in ${country} ${response.reduce((Active,province)=>Active+province.Active,0)}`,
 						]
 					}]
 				]

@@ -208,9 +208,8 @@ app.use(function (req, res, next) {
 });
 
 app.get("/", async function (req, res) {
-	let response = await fetch("https://newsapi.org/v2/everything?q=COVID&from=2020-12-30&sortBy=publishedAt&apiKey=452748674a1945a99d99275e720f6c5c&pageSize=30&page=2");
+	let response = await fetch("https://newsapi.org/v2/everything?q=COVID&from=2020-12-30&sortBy=publishedAt&apiKey=452748674a1945a99d99275e720f6c5c&pageSize=30&page=2&language=en");
 	response = await response.json();
-	console.log(response);
 	res.render("homepage",{response:response.articles});
 });
 
@@ -961,7 +960,7 @@ app.post('/chatBot', express.json(), (req, res) => {
 			return ((Number(a.loc.x) - Number(location.x)) ** 2 + (Number(a.loc.y) - Number(location.y)) ** 2) ** 0.5 -
 				((Number(b.loc.x) - Number(location.x)) ** 2 + (Number(b.loc.y) - Number(location.y)) ** 2) ** 0.5;
 		}).splice(0, 5);
-		const response = await fetch('http://17449d3d4d72.ngrok.io/predictdisease', {
+		const response = await fetch('http://5bf523e37917.ngrok.io/predictdisease', {
 			method: 'POST',
 			body: JSON.stringify({
 				symptoms: agent.context.get("symptoms").parameters["symptoms"].map(symptom => symptom.split(" ").join("_"))
@@ -1101,7 +1100,7 @@ app.post('/chatBot', express.json(), (req, res) => {
 			console.log(requestBody);
 			var responseData;
 
-			const response = await fetch("http://17449d3d4d72.ngrok.io/suggestdiet", {
+			const response = await fetch("http://5bf523e37917.ngrok.io/suggestdiet", {
 				method: "POST",
 				body: JSON.stringify(requestBody),
 				headers: {

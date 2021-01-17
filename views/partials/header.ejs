@@ -57,50 +57,50 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav text-uppercase ml-auto">
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="/doctors">Find Doctors</a>
+              <a class="nav-link js-scroll-trigger" href="/doctors" style="color:#28A9E2;">Find Doctors</a>
             </li>
             <% if(!currentuser){ %>
               <li class="nav-item">
-                <a class="nav-link js-scroll-trigger" href="/signin">SignIn</a>
+                <a class="nav-link js-scroll-trigger" href="/signin" style="color:#28A9E2;">SignIn</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link js-scroll-trigger" href="/signup">Sign-up</a>
+                <a class="nav-link js-scroll-trigger" href="/signup" style="color:#28A9E2;">Sign-up</a>
               </li>
               <% } else { 
                   if(currentuser.type == "doctor"){ %>
                     <li class="nav-item">
-                      <a class="nav-link js-scroll-trigger" href="/doctors/<%=currentuser._id%>">Signed In As Dr <%= currentuser.fname %></a>
+                      <a class="nav-link js-scroll-trigger" href="/doctors/<%=currentuser._id%>" style="color:#28A9E2;">Signed In As Dr <%= currentuser.fname %></a>
                     </li>
                     <% if(!currentuser.description){ %>
                       <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="/details/<%= currentuser._id %>">Add Details</a>
+                        <a class="nav-link js-scroll-trigger" href="/details/<%= currentuser._id %>" style="color:#28A9E2;">Add Details</a>
                       </li>
                     <% } %>
                     <li class="nav-item">
-                      <a class="nav-link js-scroll-trigger" href="/aplist">Appointments</a>
+                      <a class="nav-link js-scroll-trigger" href="/aplist" style="color:#28A9E2;">Appointments</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link js-scroll-trigger" href="/stats">Stats</a>
+                      <a class="nav-link js-scroll-trigger" href="/stats" style="color:#28A9E2;">Stats</a>
                     </li>
                   <% } 
                   if(currentuser.type == "patient"){ %>
                     <li class="nav-item">
-                      <a class="nav-link js-scroll-trigger" href="#">Signed In As <%= currentuser.fname %></a>
+                      <a class="nav-link js-scroll-trigger" href="#" style="color:#28A9E2;">Signed In As <%= currentuser.fname %></a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link js-scroll-trigger" href="/patienthome">My Appointments</a>
+                      <a class="nav-link js-scroll-trigger" href="/patienthome" style="color:#28A9E2;">My Appointments</a>
                     </li>
                   <% } 
                   if(currentuser.type == "admin"){ %>
                     <li class="nav-item">
-                      <a class="nav-link js-scroll-trigger" href="#">Signed In As Admin</a>
+                      <a class="nav-link js-scroll-trigger" href="#" style="color:#28A9E2;">Signed In As Admin</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link js-scroll-trigger" href="/admin">Feedbacks</a>
+                      <a class="nav-link js-scroll-trigger" href="/admin" style="color:#28A9E2;">Feedbacks</a>
                     </li>
                   <% } %>
                 <li class="nav-item">
-                  <a class="nav-link js-scroll-trigger" href="/logout">Logout</a>
+                  <a class="nav-link js-scroll-trigger" href="/logout" style="color:#28A9E2;">Logout</a>
                 </li>
               <% } %>
           </ul>

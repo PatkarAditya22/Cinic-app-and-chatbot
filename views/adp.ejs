@@ -127,14 +127,27 @@
                             <%= product.slug %>
                             PRICE<%= product.mrpDecimal %> -->
                             <% var image = product.image?product.image:"https://assets.pharmeasy.in/web-assets/dist/385b0098.svg?dim=80x80&dpr=1&q=100"; %>
-                            <div class="col-md-4 col-sm-6 gallery-grid gal_a gal_b" style="height: 100px;">
+                            <div class="col-md-4 col-sm-6 gallery-grid gal_a gal_b">
                                 <div class="gallery-single fix">
-                                    <img src="<%=image%>" class="img-fluid" alt="Image">
-                                    <div class="img-overlay">
+                                    <img src="<%=image%>" class="img-fluid" alt="Image" style="height: 250px;">
+                                    <div class="post-box">
+                                        <div class="post-thumb" style="height:300px">
+                                            <img src="<%= doctor.image %>" class="img-fluid" alt="post-img" width="500" height="600" />
+                                            <div class="date">
+                                                <span><%= product.name %></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="post-info">
+                                        <h4>
+                                            PRICE<%= product.mrpDecimal %>
+                                        </h4>
+                                    </div>
+                                    <!-- <div class="img-overlay">
                                         <a href="<%=image%>" data-rel="prettyPhoto[gal]"
                                             class="hoverbutton global-radius"><i class="fa fa-picture-o"></i></a>
                                         hello
-                                    </div>
+                                    </div> -->
                                 </div>
                             </div>
                         <%})%>

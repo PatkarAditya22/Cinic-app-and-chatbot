@@ -47,5 +47,5 @@ python predict.py
 3)Go to fullfillment and add the deployed website(heroku) url.<br>
 4)Go to chatbot-hackwithcw\app.js line no 1103 and line no. 963 and add the ngrok link of flask Api.
 
-![GitHub Logo](/images/logo.png)
-Format: ![Alt Text](url)
+
+![Hi](https://drive.google.com/file/d/18qNWariob7syb8Y4xYXUSWsPby3iJBFT/view?usp=sharing )

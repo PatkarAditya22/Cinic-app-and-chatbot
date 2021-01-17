@@ -121,33 +121,25 @@
                 <h1 style="text-align: center"><u>Prescribed medication</u></h1>
                 <div class="form-group">
                     <p class="brdr"><%= appointment.prescription%></p>
-                    <div class="gallery-list row">
+                    <div class="row">
                         <% products.forEach(product => { %>
-                            <!-- <%= product.name %>
-                            <%= product.slug %>
-                            PRICE<%= product.mrpDecimal %> -->
                             <% var image = product.image?product.image:"https://assets.pharmeasy.in/web-assets/dist/385b0098.svg?dim=80x80&dpr=1&q=100"; %>
-                            <div class="col-md-4 col-sm-6 gallery-grid gal_a gal_b">
-                                <div class="gallery-single fix">
-                                    <img src="<%=image%>" class="img-fluid" alt="Image" style="height: 250px;">
-                                    <div class="post-box">
-                                        <div class="post-thumb" style="height:300px">
-                                            <img src="<%= doctor.image %>" class="img-fluid" alt="post-img" width="500" height="600" />
-                                            <div class="date">
-                                                <span><%= product.name %></span>
-                                            </div>
+                            <div class="col-md-4 col-sm-6 col-lg-4" style="padding-bottom: 25px;" onclick="window.open( 'https://pharmeasy.in/online-medicine-order/<%= product.slug %>', '_blank');">
+                                <div class="post-box">
+                                    <div class="post-thumb" style="height:250px">
+                                        <img src="<%= image %>" class="img-fluid" alt="post-img" width="500" height="600" />
+                                        <div class="date">
+                                            <span><%= product.q %></span>
                                         </div>
                                     </div>
                                     <div class="post-info">
                                         <h4>
-                                            PRICE<%= product.mrpDecimal %>
+                                            PRICE: <%= product.mrpDecimal %>
                                         </h4>
+                                        <p>
+                                            <%= product.name %>
+                                        </p>
                                     </div>
-                                    <!-- <div class="img-overlay">
-                                        <a href="<%=image%>" data-rel="prettyPhoto[gal]"
-                                            class="hoverbutton global-radius"><i class="fa fa-picture-o"></i></a>
-                                        hello
-                                    </div> -->
                                 </div>
                             </div>
                         <%})%>

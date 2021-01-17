@@ -914,8 +914,13 @@ app.get("/patienthome/:id", isLoggedIn, ispatient, async function (req, res) {
 				.then((meds) => meds.map(({
 					data: {
 						products
+					},
+					query:{
+						q
 					}
-				})=>products[0]))
+				})=>{
+					return {q,...products[0]}
+				}))
 				.then((products) => res.render("adp", {
 					appointment: foundappointment,
 					products
@@ -952,7 +957,7 @@ app.post('/chatBot', express.json(), (req, res) => {
 			return ((Number(a.loc.x) - Number(location.x)) ** 2 + (Number(a.loc.y) - Number(location.y)) ** 2) ** 0.5 -
 				((Number(b.loc.x) - Number(location.x)) ** 2 + (Number(b.loc.y) - Number(location.y)) ** 2) ** 0.5;
 		}).splice(0, 5);
-		const response = await fetch('http://bc2257accf6a.ngrok.io/predictdisease', {
+		const response = await fetch('https://075d9f3880fe.ngrok.io/predictdisease', {
 			method: 'POST',
 			body: JSON.stringify({
 				symptoms: agent.context.get("symptoms").parameters["symptoms"].map(symptom => symptom.split(" ").join("_"))
@@ -1092,7 +1097,7 @@ app.post('/chatBot', express.json(), (req, res) => {
 			console.log(requestBody);
 			var responseData;
 
-			const response = await fetch("http://bc2257accf6a.ngrok.io/suggestdiet", {
+			const response = await fetch("https://075d9f3880fe.ngrok.io/suggestdiet", {
 				method: "POST",
 				body: JSON.stringify(requestBody),
 				headers: {

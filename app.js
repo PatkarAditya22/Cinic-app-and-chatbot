@@ -1220,11 +1220,11 @@ app.post('/chatBot', express.json(), (req, res) => {
 			var payloadData = {
 				"richContent": [
 					[{
-						"type": response.Country,
+						"type": response[0].Country,
 						"title": "Description title",
 						"text": [
-							response.Confirmed,
-							response.Deaths
+							`Confirmed Cases in ${country} ${response.reduce((Confirmed,province)=>Confirmed+province.Confirmed,0)}`,
+							`Confirmed Cases in ${country} ${response.reduce((Deaths,province)=>Deaths+province.Deaths,0)}`
 						]
 					}]
 				]

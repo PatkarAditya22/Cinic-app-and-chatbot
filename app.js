@@ -914,15 +914,26 @@ app.get("/patienthome/:id", isLoggedIn, ispatient, async function (req, res) {
 				.then((meds) => meds.map(({
 					data: {
 						products
+					},
+					query:{
+						q
 					}
-				})=>))
+				})=>{
+					return {q,...products[0]}
+				}))
+				.then((products) => res.render("adp", {
+					appointment: foundappointment,
+					products
+				}))
 				.catch(err => console.log(err));
-			res.render("adp", {
-				appointment: foundappointment
-			});
+			else
+				res.render("adp", {
+					appointment: foundappointment
+				});
 		}
 	});
 });
+
 
 app.get("/videoCall/:id", isLoggedIn, function (req, res) {
 	res.render("videoCall", {
@@ -1203,11 +1214,35 @@ app.post('/chatBot', express.json(), (req, res) => {
 	async function covid(agent) {
 		try {
 			var country = agent.context.get('country').parameters['country'];
-			const response;
+			var response;
 			fetch(`https://api.covid19api.com/live/country/${country}`).then((res)=>{
 				console.log(res);
 				response = res.json();
 			})
+			var payloadData = {
+				"richContent": [
+					[{
+						"type": response.Country,
+						"title": "Description title",
+						"text": [
+							response.Confirmed,
+							response.Deaths
+						]
+					}]
+				]
+			}
+			var payloadData = {
+				"richContent": [
+					[{
+						"type": response.Country,
+						"title": "Description title",
+						"text": [
+							response.Confirmed,
+							response.Deaths
+						]
+					}]
+				]
+			}
 			var payloadData = {
 				"richContent": [
 					[{

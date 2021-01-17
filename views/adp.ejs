@@ -122,7 +122,9 @@
                 <div class="form-group">
                     <p class="brdr"><%= appointment.prescription%></p>
                     <% products.forEach(product => { %>
-                        <%= product %>
+                        <%= product.name %>
+                        <%= product.slug %>
+                        <%= product.productAvailabilityFlags.mrpDecimal %>
                     <%})%>
                 </div>
 

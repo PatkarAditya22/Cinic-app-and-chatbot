@@ -121,11 +121,24 @@
                 <h1 style="text-align: center"><u>Prescribed medication</u></h1>
                 <div class="form-group">
                     <p class="brdr"><%= appointment.prescription%></p>
-                    <% products.forEach(product => { %>
-                        <%= product.name %>
-                        <%= product.slug %>
-                        PRICE<%= product.productAvailabilityFlags.mrpDecimal %>
-                    <%})%>
+                    <div class="gallery-list row">
+                        <% products.forEach(product => { %>
+                            <!-- <%= product.name %>
+                            <%= product.slug %>
+                            PRICE<%= product.mrpDecimal %> -->
+                            <% var image = product.image?product.image:"https://assets.pharmeasy.in/web-assets/dist/385b0098.svg?dim=80x80&dpr=1&q=100"; %>
+                            <div class="col-md-4 col-sm-6 gallery-grid gal_a gal_b" style="height: 100px;">
+                                <div class="gallery-single fix">
+                                    <img src="<%=image%>" class="img-fluid" alt="Image">
+                                    <div class="img-overlay">
+                                        <a href="<%=image%>" data-rel="prettyPhoto[gal]"
+                                            class="hoverbutton global-radius"><i class="fa fa-picture-o"></i></a>
+                                        hello
+                                    </div>
+                                </div>
+                            </div>
+                        <%})%>
+                    </div>
                 </div>
 
                 <h1 style="text-align: center"><u>Consulting charges</u></h1>

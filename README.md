@@ -1,6 +1,12 @@
 # chatbot-hackwithcw
 
-## Instructions to run the application
+### Link to the Project Video:   [https://youtu.be/mKuSS_M2EzI](https://youtu.be/mKuSS_M2EzI)
+
+### Link to the Powerpoint presentation :   [Click here](https://docs.google.com/presentation/d/1jYOAtZrql_PuGEm9hZTvksJGGKlZAHqZaPcWHtREK4g/edit#slide=id.g78c90a5a0c_0_82)
+
+### Link to hosted website(hosted on heroku):  [https://chatbot-clinicapp.herokuapp.com/](https://chatbot-clinicapp.herokuapp.com/)
+
+### Instructions to run the application
 
 Place .env file in root dir with the required URLs and API keys
 
@@ -10,11 +16,7 @@ npm install
 node app.js
 ```
 
-### Link to the Project Video:   [https://youtu.be/mKuSS_M2EzI](https://youtu.be/mKuSS_M2EzI)
 
-### Link to the Powerpoint presentation :   [Click here](https://docs.google.com/presentation/d/1jYOAtZrql_PuGEm9hZTvksJGGKlZAHqZaPcWHtREK4g/edit#slide=id.g78c90a5a0c_0_82)
-
-### Link to hosted website(hosted on heroku):  [https://chatbot-clinicapp.herokuapp.com/](https://chatbot-clinicapp.herokuapp.com/)
 
 
 ### Steps to setup the flask server:

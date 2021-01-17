@@ -1210,42 +1210,42 @@ app.post('/chatBot', express.json(), (req, res) => {
 		);
 	}
 
-	async function covid(agent) {
-		try {
-			var country = agent.context.get('country').parameters['country'];
-			fetch(`https://api.covid19api.com/live/country/${country}`).then((res)=>{
-				console.log(res);
-			})
-			var payloadData = {
-				"richContent": [
-					[{
-						"type": response.Country,
-						"title": "Description title",
-						"text": [
-							response.Confirmed,
-							response.Deaths
-						]
-					}]
-				]
-			}
-		} catch (err) {
-			console.log(err);
-			var payloadData = {
-				"richContent": [
-					[{
-						"type": "info",
-						"title": `I couldn't understand you.'`,
-					}]
-				]
-			}
-		}
-		agent.add(
-			new dfff.Payload(agent.UNSPECIFIED, payloadData, {
-				sendAsMessage: true,
-				rawPayload: true,
-			})
-		);
-	}
+	// async function covid(agent) {
+	// 	try {
+	// 		var country = agent.context.get('country').parameters['country'];
+	// 		fetch(`https://api.covid19api.com/live/country/${country}`).then((res)=>{
+	// 			console.log(res);
+	// 		})
+	// 		var payloadData = {
+	// 			"richContent": [
+	// 				[{
+	// 					"type": response.Country,
+	// 					"title": "Description title",
+	// 					"text": [
+	// 						response.Confirmed,
+	// 						response.Deaths
+	// 					]
+	// 				}]
+	// 			]
+	// 		}
+	// 	} catch (err) {
+	// 		console.log(err);
+	// 		var payloadData = {
+	// 			"richContent": [
+	// 				[{
+	// 					"type": "info",
+	// 					"title": `I couldn't understand you.'`,
+	// 				}]
+	// 			]
+	// 		}
+	// 	}
+	// 	agent.add(
+	// 		new dfff.Payload(agent.UNSPECIFIED, payloadData, {
+	// 			sendAsMessage: true,
+	// 			rawPayload: true,
+	// 		})
+	// 	);
+	// }
 
 	function defaultFallback(agent) {
 		agent.add(
@@ -1258,7 +1258,7 @@ app.post('/chatBot', express.json(), (req, res) => {
 	intentMap.set("confirm_time", bookappointment);
 	intentMap.set("ask physical exercise", diet);
 	intentMap.set("Default Fallback Intent", defaultFallback);
-	intentMap.set("Covid", covid);
+	// intentMap.set("Covid", covid);
 	agent.handleRequest(intentMap);
 });
 

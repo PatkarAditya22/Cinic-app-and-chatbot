@@ -208,6 +208,17 @@ app.use(function (req, res, next) {
 });
 
 app.get("/", function (req, res) {
+	var request = require('request');
+	var options = {
+	'method': 'GET',
+	'url': 'https://newsapi.org/v2/everything?q=COVID&from=2020-03-16&sortBy=publishedAt&apiKey=&pageSize=100&page=2',
+	'headers': {
+	}
+	};
+	request(options, function (error, response) {
+	if (error) throw new Error(error);
+	console.log(response.body);
+	});
 	res.render("homepage");
 });
 
@@ -1219,8 +1230,8 @@ app.post('/chatBot', express.json(), (req, res) => {
 			var payloadData = {
 				"richContent": [
 					[{
-						"type": response[0].Country,
-						"title": "Description title",
+						"type": "description",
+						"title": response[0].Country,
 						"text": [
 							`Confirmed Cases in ${country} ${response.reduce((Confirmed,province)=>Confirmed+province.Confirmed,0)}`,
 							`Confirmed Cases in ${country} ${response.reduce((Deaths,province)=>Deaths+province.Deaths,0)}`
@@ -1229,8 +1240,8 @@ app.post('/chatBot', express.json(), (req, res) => {
 				]
 			}
 			console.log({
-				"type": response[0].Country,
-				"title": "Description title",
+				"type": "description",
+				"title": response[0].Country,
 				"text": [
 					`Confirmed Cases in ${country} ${response.reduce((Confirmed,province)=>Confirmed+province.Confirmed,0)}`,
 					`Confirmed Cases in ${country} ${response.reduce((Deaths,province)=>Deaths+province.Deaths,0)}`

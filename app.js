@@ -1216,9 +1216,21 @@ app.post('/chatBot', express.json(), (req, res) => {
 			var country = agent.context.get('country').parameters['country'];
 			var response;
 			fetch(`https://api.covid19api.com/live/country/${country}`).then((res)=>{
-				console.log(res);
 				response = res.json();
+				console.log(response.body);
 			})
+			var payloadData = {
+				"richContent": [
+					[{
+						"type": response.Country,
+						"title": "Description title",
+						"text": [
+							response.Confirmed,
+							response.Deaths
+						]
+					}]
+				]
+			}
 			var payloadData = {
 				"richContent": [
 					[{

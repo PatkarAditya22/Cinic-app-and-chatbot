@@ -1213,32 +1213,40 @@ app.post('/chatBot', express.json(), (req, res) => {
 
 	async function covid(agent) {
 		var response;
-		try {
-			var country = agent.context.get('country').parameters['country'];
-			response = await fetch(`https://api.covid19api.com/live/country/${country}`);
-			response = await response.json();
-			var payloadData = {
-				"richContent": [
-					[{
-						"type": response.Country,
-						"title": "Description title",
-						"text": [
-							response.Confirmed,
-							response.Deaths
-						]
-					}]
-				]
-			}
-		} catch (err) {
-			console.log(err);
-			var payloadData = {
-				"richContent": [
+		// try {
+		// 	var country = agent.context.get('country').parameters['country'];
+		// 	response = await fetch(`https://api.covid19api.com/live/country/${country}`);
+		// 	response = await response.json();
+		// 	var payloadData = {
+		// 		"richContent": [
+		// 			[{
+		// 				"type": response.Country,
+		// 				"title": "Description title",
+		// 				"text": [
+		// 					response.Confirmed,
+		// 					response.Deaths
+		// 				]
+		// 			}]
+		// 		]
+		// 	}
+		// } catch (err) {
+		// 	console.log(err);
+		// 	var payloadData = {
+		// 		"richContent": [
+		// 			[{
+		// 				"type": "info",
+		// 				"title": `I couldn't understand you.'`,
+		// 			}]
+		// 		]
+		// 	}
+		// }
+		var payloadData = {
+			"richContent": [
 					[{
 						"type": "info",
 						"title": `I couldn't understand you.'`,
 					}]
 				]
-			}
 		}
 		console.log(payloadData)
 		agent.add(

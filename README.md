@@ -48,4 +48,14 @@ python predict.py
 4)Go to chatbot-hackwithcw\app.js line no 1103 and line no. 963 and add the ngrok link of flask Api.
 
 
-![Hi](https://drive.google.com/file/d/18qNWariob7syb8Y4xYXUSWsPby3iJBFT/view?usp=sharing )
+![](https://lh4.googleusercontent.com/cihDo07aPETA372dEgG0kORnhHJEZGAQecMd80YhO6uzy08MpMHQ-XTEmqjByng=w1200-h630-p )
+![](https://cdn.discordapp.com/attachments/799613539866116120/800415913941401670/unknown.png)
+![](https://cdn.discordapp.com/attachments/799613A539866116120/800416205243416626/unknown.png)
+![](https://cdn.discordapp.com/attachments/799613539866116120/800416516121296897/unknown.png)
+![](https://cdn.discordapp.com/attachments/799613539866116120/800416958507253780/unknown.png)
+![](https://cdn.discordapp.com/attachments/799613539866116120/800417405993615381/unknown.png)
+![](https://cdn.discordapp.com/attachments/799613539866116120/800417819446607892/unknown.png)
+![](https://cdn.discordapp.com/attachments/799613539866116120/800418858157735986/unknown.png)
+![](https://cdn.discordapp.com/attachments/799613539866116120/800419294461689896/unknown.png)
+![](https://cdn.discordapp.com/attachments/799613539866116120/800425328279158785/unknown.png)
+![](https://cdn.discordapp.com/attachments/799613539866116120/800426536078802954/unknown.png)

@@ -6,6 +6,8 @@
 
 ### Link to hosted website(hosted on heroku):  [https://chatbot-clinicapp.herokuapp.com/](https://chatbot-clinicapp.herokuapp.com/)
 
+### Link to the Google drive link:  [Click here](https://drive.google.com/drive/folders/1kBUredfaoz3tD9NYG2zi38_Qv0nV-5PV?usp=sharing)
+
 ### Instructions to run the application
 
 Place .env file in root dir with the required URLs and API keys
@@ -44,3 +46,6 @@ python predict.py
 2)Import the zip file **Boctor.zip**.<br>
 3)Go to fullfillment and add the deployed website(heroku) url.<br>
 4)Go to chatbot-hackwithcw\app.js line no 1103 and line no. 963 and add the ngrok link of flask Api.
+
+![GitHub Logo](/images/logo.png)
+Format: ![Alt Text](url)

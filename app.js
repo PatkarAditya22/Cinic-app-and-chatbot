@@ -916,12 +916,15 @@ app.get("/patienthome/:id", isLoggedIn, ispatient, async function (req, res) {
 						products
 					}
 				})=>products[0]))
-				.then((products)=>console.log(products))
-				.then((products) =>)
+				.then((products) => res.render("adp", {
+					appointment: foundappointment,
+					products
+				}))
 				.catch(err => console.log(err));
-			res.render("adp", {
-				appointment: foundappointment
-			});
+			else
+				res.render("adp", {
+					appointment: foundappointment
+				});
 		}
 	});
 });
@@ -1204,6 +1207,7 @@ app.post('/chatBot', express.json(), (req, res) => {
 
 	async function covid(agent) {
 		try {
+			var country = agent.context.get('country').parameters['country'];
 			const response = await fetch(`https://api.covid19api.com/live/country/${country}`)
 			console.log(response);
 			var payloadData = {

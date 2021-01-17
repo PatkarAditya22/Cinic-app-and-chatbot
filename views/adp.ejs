@@ -121,6 +121,9 @@
                 <h1 style="text-align: center"><u>Prescribed medication</u></h1>
                 <div class="form-group">
                     <p class="brdr"><%= appointment.prescription%></p>
+                    <% products.forEach(product => { %>
+                        <%= product %>
+                    <%})%>
                 </div>
 
                 <h1 style="text-align: center"><u>Consulting charges</u></h1>

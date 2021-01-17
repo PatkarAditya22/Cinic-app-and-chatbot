@@ -1240,6 +1240,7 @@ app.post('/chatBot', express.json(), (req, res) => {
 				]
 			}
 		}
+		console.log(payloadData)
 		agent.add(
 			new dfff.Payload(agent.UNSPECIFIED, payloadData, {
 				sendAsMessage: true,

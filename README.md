@@ -12,7 +12,7 @@ node app.js
 
 ### Link to the Project Video:   [https://youtu.be/mKuSS_M2EzI](https://youtu.be/mKuSS_M2EzI)
 
-### Link to the Powerpoint presentation :
+### Link to the Powerpoint presentation :   [Click here](https://docs.google.com/presentation/d/1jYOAtZrql_PuGEm9hZTvksJGGKlZAHqZaPcWHtREK4g/edit#slide=id.g78c90a5a0c_0_82)
 
 ### Link to hosted website(hosted on heroku):  [https://chatbot-clinicapp.herokuapp.com/](https://chatbot-clinicapp.herokuapp.com/)
 

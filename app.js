@@ -207,19 +207,11 @@ app.use(function (req, res, next) {
 	next();
 });
 
-app.get("/", function (req, res) {
-	var request = require('request');
-	var options = {
-	'method': 'GET',
-	'url': 'https://newsapi.org/v2/everything?q=COVID&from=2020-03-16&sortBy=publishedAt&apiKey=&pageSize=100&page=2',
-	'headers': {
-	}
-	};
-	request(options, function (error, response) {
-	if (error) throw new Error(error);
-	console.log(response.body);
-	});
-	res.render("homepage");
+app.get("/", async function (req, res) {
+	let response = await fetch("https://newsapi.org/v2/everything?q=COVID&from=2020-12-30&sortBy=publishedAt&apiKey=452748674a1945a99d99275e720f6c5c&pageSize=30&page=2");
+	response = await response.json();
+	console.log(response);
+	res.render("homepage",{response:response.articles});
 });
 
 // ABOUT
@@ -1234,19 +1226,13 @@ app.post('/chatBot', express.json(), (req, res) => {
 						"title": response[0].Country,
 						"text": [
 							`Confirmed Cases in ${country} ${response.reduce((Confirmed,province)=>Confirmed+province.Confirmed,0)}`,
-							`Confirmed Cases in ${country} ${response.reduce((Deaths,province)=>Deaths+province.Deaths,0)}`
+							`Confirmed Deaths in ${country} ${response.reduce((Deaths,province)=>Deaths+province.Deaths,0)}`,
+							`Confirmed Recovered in ${country} ${response.reduce((Recovered,province)=>Recovered+province.Deaths,0)}`,
+							`Confirmed Active in ${country} ${response.reduce((Active,province)=>Active+province.Deaths,0)}`,
 						]
 					}]
 				]
 			}
-			console.log({
-				"type": "description",
-				"title": response[0].Country,
-				"text": [
-					`Confirmed Cases in ${country} ${response.reduce((Confirmed,province)=>Confirmed+province.Confirmed,0)}`,
-					`Confirmed Cases in ${country} ${response.reduce((Deaths,province)=>Deaths+province.Deaths,0)}`
-				]
-			});
 		} catch (err) {
 			console.log(err);
 			var payloadData = {

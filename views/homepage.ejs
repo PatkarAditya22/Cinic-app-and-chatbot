@@ -124,54 +124,14 @@
                 <h3>Recent Updates</h3>
                 <p>Boctor provides you with all the latest updates during the pandemic</p>
             </div><!-- end title -->
-
-            <div class="row">
+			<% for(var i=0; i<6; i++){ %>
 				<div class="col-md-4">
                     <div class="services-inner-box">
-						<h2>Book appointments with doctors</h2>
-						<p>Patients can book appointments with doctor directly using site or via chatting with Boctor</p>
+						<h2><%= response[0].title %></h2>
+						<p><%= response[0].description %></p>
 					</div>
-                </div><!-- end col -->
-                <div class="col-md-4">
-                    <div class="services-inner-box">
-						<h2>Diet recommendation</h2>
-						<p>Ever stumbled upon choosing a correct diet?We are right here to suggest you the perfect appetite on the basis of various parameters</p>
-					</div>
-                </div><!-- end col -->
-				<div class="col-md-4">
-                    <div class="services-inner-box">
-						<h2>Virtual meeting with doctors</h2>
-						<p>Access video consultation with nearest doctors online 24/7, from the comfort of your home.</p>
-					</div>
-                </div><!-- end col -->
-				<div class="col-md-4">
-                    <div class="services-inner-box">
-						<div class="ser-icon">
-							<i class="flaticon-discuss-issue"></i>
-						</div>
-						<h2>Quick Response</h2>
-						<p>Provides some immediate information like how many times a human’s heart beats.</p>
-					</div>
-                </div><!-- end col -->
-				<div class="col-md-4">
-                    <div class="services-inner-box">
-						<div class="ser-icon">
-							<i class="flaticon-idea"></i>
-						</div>
-						<h2>Easy Integration</h2>
-						<p>The chatbot can easily be integrated into a different medical website.</p>
-					</div>
-                </div><!-- end col -->
-				<div class="col-md-4">
-                    <div class="services-inner-box">
-						<div class="ser-icon">
-							<i class="flaticon-idea-1"></i>
-						</div>
-						<h2>Decentralized</h2>
-						<p>Reports stored on blockchain in a dcentralized way to give secure access.</p>
-					</div>
-                </div><!-- end col -->
-            </div><!-- end row -->
+                </div>
+			<% }; %>
         </div><!-- end container -->
     </div><!-- end section -->
 	

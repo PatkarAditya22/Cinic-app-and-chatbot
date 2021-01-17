@@ -2,46 +2,51 @@ require('isomorphic-fetch');
 require('isomorphic-form-data');
 require('dotenv').config();
 
-var express					= require("express"),
-    app 					= express(),
-	bodyParser 				= require("body-parser"),
-	session 				= require("express-session"),
-	mongoose 				= require("mongoose"),
-	expressSanitizer 		= require("express-sanitizer"),
-	passport 				= require("passport"),
-	LocalStrategy 			= require("passport-local"),
-	passportLocalMongoose 	= require("passport-local-mongoose"),
-	user 				  	= require("./models/user"),
-	review 				  	= require("./models/review"),
-	feedback                = require("./models/feedback"),
-	appointment 		 	= require("./models/appointment"),
-	days 					=["monday","tuesday","wednesday","thursday","friday","saturday","sunday"],
-	faker 					= require("faker"),
-	flash       			= require("connect-flash"),
-	fetch                   = require("node-fetch")
-	databaseURL 			= process.env.DATABASEURL || 'mongodb://localhost/clinicapp';
-	arcgisRestGeocoding = require('@esri/arcgis-rest-geocoding'),
-	{ geocode } = arcgisRestGeocoding,
-	secret=process.env.SECRET||"We are clinicapp devlopers",
+var express = require("express"),
+	app = express(),
+	bodyParser = require("body-parser"),
+	session = require("express-session"),
+	mongoose = require("mongoose"),
+	expressSanitizer = require("express-sanitizer"),
+	passport = require("passport"),
+	LocalStrategy = require("passport-local"),
+	passportLocalMongoose = require("passport-local-mongoose"),
+	user = require("./models/user"),
+	review = require("./models/review"),
+	feedback = require("./models/feedback"),
+	appointment = require("./models/appointment"),
+	days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"],
+	faker = require("faker"),
+	flash = require("connect-flash"),
+	fetch = require("node-fetch")
+databaseURL = process.env.DATABASEURL || 'mongodb://localhost/clinicapp';
+arcgisRestGeocoding = require('@esri/arcgis-rest-geocoding'), {
+		geocode
+	} = arcgisRestGeocoding,
+	secret = process.env.SECRET || "We are clinicapp devlopers",
 	dfff = require('dialogflow-fulfillment');
 
-mongoose.connect(databaseURL, { useNewUrlParser: true });
+mongoose.connect(databaseURL, {
+	useNewUrlParser: true
+});
 app.use(express.static(__dirname + "/public"));
-app.use(bodyParser.urlencoded({extended : true}));
-app.set("view engine","ejs");
+app.use(bodyParser.urlencoded({
+	extended: true
+}));
+app.set("view engine", "ejs");
 app.use(expressSanitizer());
 app.use(flash());
 
 // PASSPORT CONFIGURATION
 app.use(require("express-session")({
-    secret: "We are clinicapp devlopers",
-    resave: false,
-    saveUninitialized: false
+	secret: "We are clinicapp devlopers",
+	resave: false,
+	saveUninitialized: false
 }));
 app.use(passport.initialize());
 app.use(passport.session());
 
-passport.use("user",new LocalStrategy(user.authenticate()));
+passport.use("user", new LocalStrategy(user.authenticate()));
 passport.serializeUser(user.serializeUser());
 passport.deserializeUser(user.deserializeUser());
 
@@ -51,24 +56,27 @@ passport.deserializeUser(user.deserializeUser());
 
 var multer = require('multer');
 var storage = multer.diskStorage({
-  filename: function(req, file, callback) {
-    callback(null, Date.now() + file.originalname);
-  }
+	filename: function (req, file, callback) {
+		callback(null, Date.now() + file.originalname);
+	}
 });
 var imageFilter = function (req, file, cb) {
-    // accept image files only
-    if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
-        return cb(new Error('Only image files are allowed!'), false);
-    }
-    cb(null, true);
+	// accept image files only
+	if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
+		return cb(new Error('Only image files are allowed!'), false);
+	}
+	cb(null, true);
 };
-var upload = multer({ storage: storage, fileFilter: imageFilter})
+var upload = multer({
+	storage: storage,
+	fileFilter: imageFilter
+})
 
 var cloudinary = require('cloudinary');
-cloudinary.config({ 
-  cloud_name: process.env.cloud_name, 
-  api_key: process.env.api_key, 
-  api_secret: process.env.api_secret
+cloudinary.config({
+	cloud_name: process.env.cloud_name,
+	api_key: process.env.api_key,
+	api_secret: process.env.api_secret
 });
 
 //MULTER AND CLOUDINARY CONFIGURATION COMPLETE
@@ -141,10 +149,10 @@ cloudinary.config({
 // 							x: response.candidates[0].location.x,
 // 							y: response.candidates[0].location.y
 // 						}
-						
+
 // 					})
 // 					console.log("x and y assigned")
-					
+
 // 					newlyCreated.schedule.push({
 // 						day :"monday",
 // 						from :"10",
@@ -157,319 +165,316 @@ cloudinary.config({
 // 						});
 // 						newlyCreated.save();
 // 				});
-				
+
 // 			}
 // 		});
-		
+
 //complete	
-	// var suser = {
-	// 	username: faker.internet.userName(),
-	// 	type: "doctor",
-	// 	fname: faker.name.firstName(),
-	// 	lname: faker.name.lastName(),
-	// 	email: faker.internet.email(),
-	// 	contactnumber: faker.phone.phoneNumber(),
-	// 	image: imgurl[i],
-	// 	address: faker.address.streetAddress(),
-	// 	description: faker.lorem.paragraph()
-	// };		
-			// geocode(suser.address).then((response) => {
-			// 		test = response;
-			// 		Object.assign(suser, {
-			// 			loc: {
-			// 				x: response.candidates[0].location.x,
-			// 				y: response.candidates[0].location.y
-			// 			}
-			// 		})
-			// 		console.log(suser.loc.x + " Inside " + suser.loc.y);
-			// 	})
-				// console.log(test);
-				 
-					
-		
+// var suser = {
+// 	username: faker.internet.userName(),
+// 	type: "doctor",
+// 	fname: faker.name.firstName(),
+// 	lname: faker.name.lastName(),
+// 	email: faker.internet.email(),
+// 	contactnumber: faker.phone.phoneNumber(),
+// 	image: imgurl[i],
+// 	address: faker.address.streetAddress(),
+// 	description: faker.lorem.paragraph()
+// };		
+// geocode(suser.address).then((response) => {
+// 		test = response;
+// 		Object.assign(suser, {
+// 			loc: {
+// 				x: response.candidates[0].location.x,
+// 				y: response.candidates[0].location.y
+// 			}
+// 		})
+// 		console.log(suser.loc.x + " Inside " + suser.loc.y);
+// 	})
+// console.log(test);
+
+
+
 //}
 //COMPLETE
 
-app.use(function(req, res, next){
-res.locals.currentuser = req.user;
-res.locals.error = req.flash("error");
-res.locals.success = req.flash("success");
-res.locals.warning = req.flash("warning");
-res.locals.info = req.flash("success");
-next();
+app.use(function (req, res, next) {
+	res.locals.currentuser = req.user;
+	res.locals.error = req.flash("error");
+	res.locals.success = req.flash("success");
+	res.locals.warning = req.flash("warning");
+	res.locals.info = req.flash("success");
+	next();
 });
 
-app.get("/",function(req,res){
-		res.render("homepage");
+app.get("/", function (req, res) {
+	res.render("homepage");
 });
 
 // ABOUT
-app.get("/about", function(req, res) {
+app.get("/about", function (req, res) {
 	res.render("about");
 });
 
-app.get("/signup",nouser,function(req,res){
-		res.render("signup");
+app.get("/signup", nouser, function (req, res) {
+	res.render("signup");
 });
 
-app.get("/signin",nouser,function(req,res){
-		res.render("signin");
+app.get("/signin", nouser, function (req, res) {
+	res.render("signin");
 });
 
-app.get("/aplist",isLoggedIn,isdoctor,function(req,res){
-            res.render("aplist");
+app.get("/aplist", isLoggedIn, isdoctor, function (req, res) {
+	res.render("aplist");
 });
 
-app.get("/profileupdate",isLoggedIn,isdoctor,function(req,res){
+app.get("/profileupdate", isLoggedIn, isdoctor, function (req, res) {
 	res.render("profileupdate");
 });
 
-app.get("/picupdate",isLoggedIn,isdoctor,function(req,res){
-		res.render("picupdate");
+app.get("/picupdate", isLoggedIn, isdoctor, function (req, res) {
+	res.render("picupdate");
 });
 
-app.get("/feedback", isLoggedIn, function(req, res) {
+app.get("/feedback", isLoggedIn, function (req, res) {
 	res.render("feedback");
 });
 
-app.post("/feedback",isLoggedIn, function(req, res) {
-	var fb=req.sanitize(req.body.feedback.feedback),
-	un=req.sanitize(req.body.feedback.username);
-	feedback.create({feedback:fb,username:un}, function(err, newfeedback) {
-		if(err||!newfeedback) {
-			req.flash("error","An error occured while submittng your feedback please try again later");
+app.post("/feedback", isLoggedIn, function (req, res) {
+	var fb = req.sanitize(req.body.feedback.feedback),
+		un = req.sanitize(req.body.feedback.username);
+	feedback.create({
+		feedback: fb,
+		username: un
+	}, function (err, newfeedback) {
+		if (err || !newfeedback) {
+			req.flash("error", "An error occured while submittng your feedback please try again later");
 			res.redirect("back");
-		}
-		else {
-			req.flash("success","Feedback submitted successfully ");
+		} else {
+			req.flash("success", "Feedback submitted successfully ");
 		}
 	});
 	res.redirect("/");
 });
 
-app.post("/profileupdate",isLoggedIn,isdoctor,function(req,res){
-	user.findById(req.user._id,function(err,doctor){
-		if(err){
-			req.flash("error","An Error Occured");
+app.post("/profileupdate", isLoggedIn, isdoctor, function (req, res) {
+	user.findById(req.user._id, function (err, doctor) {
+		if (err) {
+			req.flash("error", "An Error Occured");
 			res.redirect("back");
-		}
-		else{
-			doctor.schedule=[];
-			if(req.body.id0 == "on")
-			{
-					doctor.schedule.push({
-					day :days[0],
-					from :req.body.id0from,
-					to :req.body.id0to
-			});
+		} else {
+			doctor.schedule = [];
+			if (req.body.id0 == "on") {
+				doctor.schedule.push({
+					day: days[0],
+					from: req.body.id0from,
+					to: req.body.id0to
+				});
 			}
-			if(req.body.id1 == "on")
-			{
-					doctor.schedule.push({
-					day :days[1],
-					from :req.body.id1from,
-					to :req.body.id1to
-			});
-			}if(req.body.id2 == "on")
-			{
-					doctor.schedule.push({
-					day :days[2],
-					from :req.body.id2from,
-					to :req.body.id2to
-			});
+			if (req.body.id1 == "on") {
+				doctor.schedule.push({
+					day: days[1],
+					from: req.body.id1from,
+					to: req.body.id1to
+				});
 			}
-			if(req.body.id3 == "on")
-			{
-					doctor.schedule.push({
-					day :days[3],
-					from :req.body.id3from,
-					to :req.body.id3to
-			});
+			if (req.body.id2 == "on") {
+				doctor.schedule.push({
+					day: days[2],
+					from: req.body.id2from,
+					to: req.body.id2to
+				});
 			}
-			if(req.body.id4 == "on")
-			{
-					doctor.schedule.push({
-					day :days[4],
-					from :req.body.id4from,
-					to :req.body.id4to
-			});
+			if (req.body.id3 == "on") {
+				doctor.schedule.push({
+					day: days[3],
+					from: req.body.id3from,
+					to: req.body.id3to
+				});
 			}
-			if(req.body.id5 == "on")
-			{
-					doctor.schedule.push({
-					day :days[5],
-					from :req.body.id5from,
-					to :req.body.id5to
-			});
+			if (req.body.id4 == "on") {
+				doctor.schedule.push({
+					day: days[4],
+					from: req.body.id4from,
+					to: req.body.id4to
+				});
 			}
-			if(req.body.id6 == "on")
-			{
-					doctor.schedule.push({
-					day :days[6],
-					from :req.body.id6from,
-					to :req.body.id6to
-			});
+			if (req.body.id5 == "on") {
+				doctor.schedule.push({
+					day: days[5],
+					from: req.body.id5from,
+					to: req.body.id5to
+				});
+			}
+			if (req.body.id6 == "on") {
+				doctor.schedule.push({
+					day: days[6],
+					from: req.body.id6from,
+					to: req.body.id6to
+				});
 			}
 			doctor.save();
-			req.flash("success","Successfully Updated!");
+			req.flash("success", "Successfully Updated!");
 			res.redirect("/doctors/" + doctor._id);
 		}
 	});
 });
 
-app.post("/picupdate",isLoggedIn,isdoctor, upload.single('image'),function(req,res){
-		user.findById(req.user._id, async function(err, doctor){
-			if(err){
-				req.flash("error", err.message);
-				res.redirect("back");
-			} else {
-				if (req.file) {
-				  try {
-					  await cloudinary.v2.uploader.destroy(doctor.image_id);
-					  var result = await cloudinary.v2.uploader.upload(req.file.path);
-					  doctor.image_id = result.public_id;
-					  doctor.image = result.secure_url;
-				  } catch(err) {
-					  req.flash("error", err.message);
-					  return res.redirect("back");
-				  }
+app.post("/picupdate", isLoggedIn, isdoctor, upload.single('image'), function (req, res) {
+	user.findById(req.user._id, async function (err, doctor) {
+		if (err) {
+			req.flash("error", err.message);
+			res.redirect("back");
+		} else {
+			if (req.file) {
+				try {
+					await cloudinary.v2.uploader.destroy(doctor.image_id);
+					var result = await cloudinary.v2.uploader.upload(req.file.path);
+					doctor.image_id = result.public_id;
+					doctor.image = result.secure_url;
+				} catch (err) {
+					req.flash("error", err.message);
+					return res.redirect("back");
 				}
-				doctor.description = req.body.description;
-				doctor.address=req.body.address;
-				geocode(req.body.address).then((response) => {
-					Object.assign(doctor, {
-						loc: {
-							x: response.candidates[0].location.x,
-							y: response.candidates[0].location.y
-						}
-					})
-					doctor.save();
-					req.flash("success","Successfully Updated!");
-					res.redirect("/doctors/" + doctor._id);
-				});
-				
-				
 			}
-		});
-	});
+			doctor.description = req.body.description;
+			doctor.address = req.body.address;
+			geocode(req.body.address).then((response) => {
+				Object.assign(doctor, {
+					loc: {
+						x: response.candidates[0].location.x,
+						y: response.candidates[0].location.y
+					}
+				})
+				doctor.save();
+				req.flash("success", "Successfully Updated!");
+				res.redirect("/doctors/" + doctor._id);
+			});
 
-app.get("/stats",isLoggedIn,isdoctor,function(req,res){
-	user.findById(req.user._id).populate("appointments").exec(function(err, founddoctor){
-        if(err||!founddoctor){
-            console.log(err);
-        } else {
-			var appo=[];
-			var days =["sunday","monday","tuesday","wednesday","thursday","friday","saturday"];
+
+		}
+	});
+});
+
+app.get("/stats", isLoggedIn, isdoctor, function (req, res) {
+	user.findById(req.user._id).populate("appointments").exec(function (err, founddoctor) {
+		if (err || !founddoctor) {
+			console.log(err);
+		} else {
+			var appo = [];
+			var days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
 			var d = new Date();
 			var c = new Date();
-			var sub=30-Number(d.getDate());
-			d.setTime(c.getTime()+sub*24*60*60*1000);
-			for(i=-1;d.getMonth()==c.getMonth();i--)
-			{
-				req.user.schedule.forEach(function(schedule){ 
-				if(schedule.day == days[d.getDay()])
-				{
-					var j=0;
-					founddoctor.appointments.reverse();
-					founddoctor.appointments.forEach(function(appointment)
-					{
-						if(d.getDate()==appointment.appointmentdate.getDate()
-						&&d.getMonth()==appointment.appointmentdate.getMonth()
-						&&d.getFullYear()==appointment.appointmentdate.getFullYear())
-						{
-							j++;
-						}
-					});
-					var month=d.getMonth()+1;
-					var t=d.getDate()+"/"+month+"/"+d.getFullYear();
-					appo.push({label:t,y:j});
-				}
+			var sub = 30 - Number(d.getDate());
+			d.setTime(c.getTime() + sub * 24 * 60 * 60 * 1000);
+			for (i = -1; d.getMonth() == c.getMonth(); i--) {
+				req.user.schedule.forEach(function (schedule) {
+					if (schedule.day == days[d.getDay()]) {
+						var j = 0;
+						founddoctor.appointments.reverse();
+						founddoctor.appointments.forEach(function (appointment) {
+							if (d.getDate() == appointment.appointmentdate.getDate() &&
+								d.getMonth() == appointment.appointmentdate.getMonth() &&
+								d.getFullYear() == appointment.appointmentdate.getFullYear()) {
+								j++;
+							}
+						});
+						var month = d.getMonth() + 1;
+						var t = d.getDate() + "/" + month + "/" + d.getFullYear();
+						appo.push({
+							label: t,
+							y: j
+						});
+					}
 				});
-				d.setTime(c.getTime()+sub*24*60*60*1000+i*24*60*60*1000);
+				d.setTime(c.getTime() + sub * 24 * 60 * 60 * 1000 + i * 24 * 60 * 60 * 1000);
 			}
-			res.render("stats",{appointmentdata:appo});
+			res.render("stats", {
+				appointmentdata: appo
+			});
 		}
-});
+	});
 });
 
-app.get("/doctorhome/date/:id",isLoggedIn,isdoctor,function(req,res){
-	user.findById(req.user._id).populate("appointments").exec(function(err, founddoctor){
-        if(err){
-			req.flash("error","Doctor Not Found");
+app.get("/doctorhome/date/:id", isLoggedIn, isdoctor, function (req, res) {
+	user.findById(req.user._id).populate("appointments").exec(function (err, founddoctor) {
+		if (err) {
+			req.flash("error", "Doctor Not Found");
 			res.redirect("back");
-        } else {
-			var appo1 =[];
-			var appo2=[];
-			var addappo=false;
-			founddoctor.appointments.forEach(function(appointment)
-			{
-				var t=new Date();
+		} else {
+			var appo1 = [];
+			var appo2 = [];
+			var addappo = false;
+			founddoctor.appointments.forEach(function (appointment) {
+				var t = new Date();
 				t.setTime(req.params.id);
-				if(t.getDate()==appointment.appointmentdate.getDate()
-				&&t.getMonth()==appointment.appointmentdate.getMonth()
-				&&t.getFullYear()==appointment.appointmentdate.getFullYear())
-				{
-					if(appointment.time){
+				if (t.getDate() == appointment.appointmentdate.getDate() &&
+					t.getMonth() == appointment.appointmentdate.getMonth() &&
+					t.getFullYear() == appointment.appointmentdate.getFullYear()) {
+					if (appointment.time) {
 						appo1.push(appointment);
-					}
-					else {
+					} else {
 						appo2.push(appointment);
 					}
 				}
 			});
-			appo1.sort(function(a,b){
-				var temp1=60*Number(a.time[0]+a.time[1])+Number(a.time[3]+a.time[4]);
-				var temp2=60*Number(b.time[0]+b.time[1])+Number(b.time[3]+b.time[4]);
-				return temp1-temp2;
+			appo1.sort(function (a, b) {
+				var temp1 = 60 * Number(a.time[0] + a.time[1]) + Number(a.time[3] + a.time[4]);
+				var temp2 = 60 * Number(b.time[0] + b.time[1]) + Number(b.time[3] + b.time[4]);
+				return temp1 - temp2;
 			})
-			var t1=new Date();
+			var t1 = new Date();
 			t1.setTime(req.params.id);
-			var t2=new Date();
+			var t2 = new Date();
 			t2.setTime(Date.now());
-			if(t1.getDate()>=t2.getDate()){
-				addappo=true;
-			}
-			else if(t1.getMonth()>t2.getMonth()){
-				addappo=true;
+			if (t1.getDate() >= t2.getDate()) {
+				addappo = true;
+			} else if (t1.getMonth() > t2.getMonth()) {
+				addappo = true;
 			}
 			res.render("doctorhome", {
 				appointments: appo1,
-				oappointments:appo2,
-				addappo:addappo,T:t1
+				oappointments: appo2,
+				addappo: addappo,
+				T: t1
 			});
-        }
-    });
+		}
+	});
 });
 
-app.get("/patienthome",isLoggedIn,ispatient,function(req,res){
-	user.findById(req.user._id).populate("appointments").exec(function(err, foundpatient){
-        if(err||!foundpatient){
-            req.flash("error","Sorry!! An error occured");
+app.get("/patienthome", isLoggedIn, ispatient, function (req, res) {
+	user.findById(req.user._id).populate("appointments").exec(function (err, foundpatient) {
+		if (err || !foundpatient) {
+			req.flash("error", "Sorry!! An error occured");
 			res.redirect("back");
-        } else {
-            res.render("patienthome", {patient: foundpatient});
-        }
-    });
+		} else {
+			res.render("patienthome", {
+				patient: foundpatient
+			});
+		}
+	});
 });
 
-app.get("/admin",isLoggedIn,isadmin,function(req,res){
-	feedback.find({}, function(err, allfeedbacks){
-		if(err||!allfeedbacks){
-			req.flash("info","No feedback found");
+app.get("/admin", isLoggedIn, isadmin, function (req, res) {
+	feedback.find({}, function (err, allfeedbacks) {
+		if (err || !allfeedbacks) {
+			req.flash("info", "No feedback found");
 			res.redirect("/");
 		} else {
-		   res.render("admin",{feedbacks:allfeedbacks});
+			res.render("admin", {
+				feedbacks: allfeedbacks
+			});
 		}
-	 });
+	});
 });
 
-app.get("/logout",isLoggedIn,function(req,res){
+app.get("/logout", isLoggedIn, function (req, res) {
 	req.logout();
-	req.flash("success","Logged Out Successfully");
+	req.flash("success", "Logged Out Successfully");
 	res.redirect("/");
 });
 
-app.post("/signup",function(req,res){
+app.post("/signup", function (req, res) {
 	var suser = {
 		username: req.sanitize(req.body.username),
 		type: req.body.type,
@@ -478,167 +483,170 @@ app.post("/signup",function(req,res){
 		email: req.sanitize(req.body.email),
 		contactnumber: req.sanitize(req.body.contactnumber)
 	};
-    user.register(suser, req.body.password ,function(err, newlyCreated){
-        if(err||!newlyCreated){
-			req.flash("error","A User With That Username Already Exists");
+	user.register(suser, req.body.password, function (err, newlyCreated) {
+		if (err || !newlyCreated) {
+			req.flash("error", "A User With That Username Already Exists");
 			return res.render("signup");
 		}
-		passport.authenticate("user")(req, res, function(){
-			req.flash("success","Sign Up Successful");
+		passport.authenticate("user")(req, res, function () {
+			req.flash("success", "Sign Up Successful");
 			res.redirect("/");
 		});
-    });
+	});
 });
 
-app.get("/details/:id",isLoggedIn,isdoctor,nodoctordes,function(req,res){
-	var pm = { id : req.params.id };
-	res.render("docdes",{pm:pm});
+app.get("/details/:id", isLoggedIn, isdoctor, nodoctordes, function (req, res) {
+	var pm = {
+		id: req.params.id
+	};
+	res.render("docdes", {
+		pm: pm
+	});
 });
 
-app.post("/doctors/:id/deletereview",isLoggedIn,ispatient,function(req,res){
-	review.findByIdAndRemove(req.params.id,function(err){
-		if(err){
-			req.flash("error","Failed To Delete Review");
+app.post("/doctors/:id/deletereview", isLoggedIn, ispatient, function (req, res) {
+	review.findByIdAndRemove(req.params.id, function (err) {
+		if (err) {
+			req.flash("error", "Failed To Delete Review");
 			res.redirect("back");
-		}
-		else{
+		} else {
 			res.redirect("/doctors");
 		}
 	})
 });
 
-app.post("/details/:id",isLoggedIn,isdoctor,nodoctordes, upload.single('image'), function(req, res) {
-    cloudinary.uploader.upload(req.file.path, function(result) {
-      user.findById(req.params.id, function(err, founddoctor){
-        if(err){
-            req.flash("error","An Error Occured!! Please Try Again Later");
-			res.redirect("back");
-        } else {
-			if(result.secure_url)
-			{		geocode(req.sanitize(req.body.address)).then((response) => {
+app.post("/details/:id", isLoggedIn, isdoctor, nodoctordes, upload.single('image'), function (req, res) {
+	cloudinary.uploader.upload(req.file.path, function (result) {
+		user.findById(req.params.id, function (err, founddoctor) {
+			if (err) {
+				req.flash("error", "An Error Occured!! Please Try Again Later");
+				res.redirect("back");
+			} else {
+				if (result.secure_url) {
+					geocode(req.sanitize(req.body.address)).then((response) => {
 						founddoctor.loc.x = response.candidates[0].location.x;
 						founddoctor.loc.y = response.candidates[0].location.y;
 						founddoctor.image = result.secure_url;
 						founddoctor.image_id = result.public_id;
-						founddoctor.description=req.sanitize(req.body.description);
-						founddoctor.address = req.sanitize(req.body.address);	
-						if(req.body.id0 == "on")
-							{
-								founddoctor.schedule.push({
-									day :days[0],
-									from :req.body.id0from,
-									to :req.body.id0to
+						founddoctor.description = req.sanitize(req.body.description);
+						founddoctor.address = req.sanitize(req.body.address);
+						if (req.body.id0 == "on") {
+							founddoctor.schedule.push({
+								day: days[0],
+								from: req.body.id0from,
+								to: req.body.id0to
 							});
-							}
-							if(req.body.id1 == "on")
-							{
-								founddoctor.schedule.push({
-									day :days[1],
-									from :req.body.id1from,
-									to :req.body.id1to
+						}
+						if (req.body.id1 == "on") {
+							founddoctor.schedule.push({
+								day: days[1],
+								from: req.body.id1from,
+								to: req.body.id1to
 							});
-							}if(req.body.id2 == "on")
-							{
-								founddoctor.schedule.push({
-									day :days[2],
-									from :req.body.id2from,
-									to :req.body.id2to
+						}
+						if (req.body.id2 == "on") {
+							founddoctor.schedule.push({
+								day: days[2],
+								from: req.body.id2from,
+								to: req.body.id2to
 							});
-							}
-							if(req.body.id3 == "on")
-							{
-								founddoctor.schedule.push({
-									day :days[3],
-									from :req.body.id3from,
-									to :req.body.id3to
+						}
+						if (req.body.id3 == "on") {
+							founddoctor.schedule.push({
+								day: days[3],
+								from: req.body.id3from,
+								to: req.body.id3to
 							});
-							}
-							if(req.body.id4 == "on")
-							{
-								founddoctor.schedule.push({
-									day :days[4],
-									from :req.body.id4from,
-									to :req.body.id4to
+						}
+						if (req.body.id4 == "on") {
+							founddoctor.schedule.push({
+								day: days[4],
+								from: req.body.id4from,
+								to: req.body.id4to
 							});
-							}
-							if(req.body.id5 == "on")
-							{
-								founddoctor.schedule.push({
-									day :days[5],
-									from :req.body.id5from,
-									to :req.body.id5to
+						}
+						if (req.body.id5 == "on") {
+							founddoctor.schedule.push({
+								day: days[5],
+								from: req.body.id5from,
+								to: req.body.id5to
 							});
-							}
-							if(req.body.id6 == "on")
-							{
-								founddoctor.schedule.push({
-									day :days[6],
-									from :req.body.id6from,
-									to :req.body.id6to
+						}
+						if (req.body.id6 == "on") {
+							founddoctor.schedule.push({
+								day: days[6],
+								from: req.body.id6from,
+								to: req.body.id6to
 							});
-							}
+						}
 						founddoctor.save();
-						req.flash("success","Details Added Successfully");
+						req.flash("success", "Details Added Successfully");
 						res.redirect("/aplist");
 					});
+				} else {
+					req.flash("error", "An Error Occured!! Please Try Again Later");
+					res.redirect("back");
+				}
 			}
-			else{
-				req.flash("error","An Error Occured!! Please Try Again Later");
+		});
+	});
+});
+
+app.get("/doctors", function (req, res) {
+	//
+	var noMatch = false;
+	if (req.query.search) {
+		const regex = new RegExp(escapeRegex(req.query.search), 'gi');
+		// Get all users from DB
+		user.find({
+			fname: regex
+		}, function (err, alldoctors) {
+			if (err) {
+				console.log(err);
+			} else {
+				if (alldoctors.length < 1) {
+					noMatch = true;
+				}
+				res.render("doctors", {
+					doctors: alldoctors,
+					noMatch: noMatch
+				});
+			}
+		});
+	} else {
+		// Get all users from DB
+		user.find({}, function (err, alldoctors) {
+			if (err) {
+				console.log(err);
+			} else {
+				res.render("doctors", {
+					doctors: alldoctors,
+					noMatch: noMatch
+				});
+			}
+		});
+	}
+});
+
+app.get("/:id", function (req, res, next) {
+	user.findById(req.params.id, function (err, doctor) {
+		if (err || !doctor) {
+			req.flash("error", "Doctor Not Found");
+			res.redirect("back");
+		} else {
+			if (doctor.type == "doctor" && doctor.address) {
+				return next();
+			} else {
+				req.flash("error", "Doctor Not Found");
 				res.redirect("back");
 			}
 		}
 	});
-    });
-});
-
-app.get("/doctors",function(req,res){
-	//
-	var noMatch = false;
-    if(req.query.search) {
-        const regex = new RegExp(escapeRegex(req.query.search), 'gi');
-        // Get all users from DB
-        user.find({fname: regex}, function(err, alldoctors){
-           if(err){
-               console.log(err);
-           } else {
-              if(alldoctors.length < 1) {
-                  noMatch = true;
-              }
-              res.render("doctors",{doctors:alldoctors, noMatch: noMatch});
-           }
-        });
-    } else {
-        // Get all users from DB
-        user.find({}, function(err, alldoctors){
-           if(err){
-               console.log(err);
-           } else {
-              res.render("doctors",{doctors:alldoctors, noMatch: noMatch});
-           }
-        });
-    }
-});
-
-app.get("/:id",function(req, res, next){
-	user.findById(req.params.id, function(err, doctor){
-        if(err||!doctor){
-			req.flash("error","Doctor Not Found");
-			res.redirect("back");
-        } else {
-			if(doctor.type=="doctor"&&doctor.address){
-				return next();
-			}
-			else{
-				req.flash("error","Doctor Not Found");
-			res.redirect("back");
-			}
-        }
-});
-}, function(req, res){
-	user.findById(req.params.id).populate("reviews").populate("appointments").exec(function(err, founddoctor){
-        if(err||!founddoctor){
-            console.log(err);
-        } else {
+}, function (req, res) {
+	user.findById(req.params.id).populate("reviews").populate("appointments").exec(function (err, founddoctor) {
+		if (err || !founddoctor) {
+			console.log(err);
+		} else {
 			// geocode(founddoctor.address);
 			// .then((response) => {
 			//   loc={x:response.candidates[0].location.x,
@@ -647,188 +655,188 @@ app.get("/:id",function(req, res, next){
 			// 		doctor: founddoctor,loc:loc
 			// 	});
 			// });
-			res.render("show", {doctor: founddoctor});
-        }
-    });
-});
-
-app.get("/history/:id", isLoggedIn,isdoctor,function(req, res){
-	user.findById(req.params.id).populate("appointments").exec(function(err, foundpatient){
-        if(err||!foundpatient){
-            req.flash("error","Patient Not Found");
-			res.redirect("back");
-        } else {
-            res.render("history", {patient: foundpatient});
-        }
-    });
-});
-
-app.get("/doctors/:id/:id2/newreview",isLoggedIn,ispatient,
-function(req, res, next){
-   appointment.findById(req.params.id2,function(err,foundappointment){
-	if(err||!foundappointment){
-		req.flash("error","an error occured")
-	} else {
-		if(foundappointment.status=="CNF")
-		{
-			return next();
+			res.render("show", {
+				doctor: founddoctor
+			});
 		}
-		else
-			{
-				req.flash("error","You can leave a review only after your appointment is completed");
-				res.redirect("back");
-		 }
-	}
-   });
-}
-,function(req, res){
-    // find doctor by id
-		user.findById(req.params.id, function(err, doctor){
-        if(err||!doctor){
-            console.log(err);
-        } else {
-             res.render("newreview", {doctor: doctor});
-        }
-    })
+	});
 });
 
-app.post("/doctors/:id/newreview",isLoggedIn,ispatient, function(req, res){
-	user.findById(req.params.id, function(err, doctor){
-		if(err||!doctor){
-			req.flash("error","An Error Occured!! Please Try Again");
+app.get("/history/:id", isLoggedIn, isdoctor, function (req, res) {
+	user.findById(req.params.id).populate("appointments").exec(function (err, foundpatient) {
+		if (err || !foundpatient) {
+			req.flash("error", "Patient Not Found");
 			res.redirect("back");
 		} else {
-		 review.create(req.body.review, function(err, review){
-			if(err||!review){
+			res.render("history", {
+				patient: foundpatient
+			});
+		}
+	});
+});
+
+app.get("/doctors/:id/:id2/newreview", isLoggedIn, ispatient,
+	function (req, res, next) {
+		appointment.findById(req.params.id2, function (err, foundappointment) {
+			if (err || !foundappointment) {
+				req.flash("error", "an error occured")
+			} else {
+				if (foundappointment.status == "CNF") {
+					return next();
+				} else {
+					req.flash("error", "You can leave a review only after your appointment is completed");
+					res.redirect("back");
+				}
+			}
+		});
+	},
+	function (req, res) {
+		// find doctor by id
+		user.findById(req.params.id, function (err, doctor) {
+			if (err || !doctor) {
 				console.log(err);
 			} else {
-				review.author.id = req.sanitize(req.user._id);
-				review.text=req.sanitize(req.body.text);
-				review.author.username = req.user.username;
-               review.save();
-				doctor.reviews.push(review);
-				doctor.save();
-				res.redirect("/doctors/" + doctor._id);
+				res.render("newreview", {
+					doctor: doctor
+				});
 			}
-		 });
-		}
+		})
 	});
- });
 
- app.get("/doctors/:id/bookappointment",isLoggedIn,ispatient, function(req, res){
-		user.findById(req.params.id, function(err, doctor){
-        if(err||!doctor){
-            req.flash("error","An Error Occured!! Please Try Again");
-			res.redirect("back");
-        } else {
-             res.render("bookappointment", {doctor: doctor});
-        }
-    })
-});
-
-app.post("/doctors/:id/bookappointment",isLoggedIn,ispatient, function(req, res){
-	user.findById(req.params.id, function(err, doctor){
-		if(err||!doctor){
-			req.flash("error","An Error Occured!! Please Try Again");
+app.post("/doctors/:id/newreview", isLoggedIn, ispatient, function (req, res) {
+	user.findById(req.params.id, function (err, doctor) {
+		if (err || !doctor) {
+			req.flash("error", "An Error Occured!! Please Try Again");
 			res.redirect("back");
 		} else {
-		 appointment.create(
-			 {
-				patientname : req.user.fname,
-				doctorname : doctor.fname,
-				patientcn : req.user.contactnumber,
-				doctorcn : doctor.contactnumber,
-				appointmentdate :req.body.appointmentdate,
-				doctorid : doctor._id,
-				patientid : req.user._id
-				}, function(err, appointment){
-			if(err||!appointment){
-				req.flash("error","An Error Occured!! Please Try Again");
-				res.redirect("back");
-			} else {
-				appointment.save();
-				doctor.appointments.push(appointment);
-				doctor.save();
-				req.user.appointments.push(appointment);
-				req.user.save();
-				req.flash("success","Your Appointment Request Has Been Sent .Please Wait For Confirmation");
-				res.redirect("/patienthome");
-			}
-		 });
+			review.create(req.body.review, function (err, review) {
+				if (err || !review) {
+					console.log(err);
+				} else {
+					review.author.id = req.sanitize(req.user._id);
+					review.text = req.sanitize(req.body.text);
+					review.author.username = req.user.username;
+					review.save();
+					doctor.reviews.push(review);
+					doctor.save();
+					res.redirect("/doctors/" + doctor._id);
+				}
+			});
 		}
 	});
 });
 
-app.get("/doctors/:id/bookappointment/:appointmentdate",isLoggedIn,ispatient, function(req, res){
-	user.findById(req.params.id, function(err, doctor){
-		if(err||!doctor){
-			req.flash("error","An Error Occured!! Please Try Again");
+app.get("/doctors/:id/bookappointment", isLoggedIn, ispatient, function (req, res) {
+	user.findById(req.params.id, function (err, doctor) {
+		if (err || !doctor) {
+			req.flash("error", "An Error Occured!! Please Try Again");
 			res.redirect("back");
 		} else {
-		 appointment.create(
-			 {
-				patientname : req.user.fname,
-				doctorname : doctor.fname,
-				patientcn : req.user.contactnumber,
-				doctorcn : doctor.contactnumber,
-				appointmentdate :new Date(req.params.appointmentdate),
-				doctorid : doctor._id,
-				patientid : req.user._id
-				}, function(err, appointment){
-			if(err||!appointment){
-				console.log(err);
-				req.flash("error","An Error Occured!! Please Try Again");
-				res.redirect("back");
-			} else {
-				appointment.save();
-				doctor.appointments.push(appointment);
-				doctor.save();
-				req.user.appointments.push(appointment);
-				req.user.save();
-				req.flash("success","Your Appointment Request Has Been Sent .Please Wait For Confirmation");
-				res.redirect("/patienthome");
-			}
-		 });
+			res.render("bookappointment", {
+				doctor: doctor
+			});
 		}
-	});
+	})
 });
- 
-app.post("/addappointment",isLoggedIn,isdoctor, function(req, res){
-	user.findById(req.user.id, function(err, doctor){
-		if(err||!doctor){
-			req.flash("error","An Error Occured!! Please Try Again");
-				res.redirect("back");
-		} else {
-		 appointment.create(
-			 {
-				patientname : req.sanitize(req.body.patientname),
-				doctorname : doctor.fname,
-				patientcn : req.sanitize(req.body.patientcn),
-				doctorcn : doctor.contactnumber,
-				appointmentdate :req.body.appointmentdate,
-				doctorid : doctor._id
-				}, function(err, appointment){
-			if(err||!appointment){
-				req.flash("error","An Error Occured!! Please Try Again");
-				res.redirect("back");
-			} else {
-				appointment.save();
-				doctor.appointments.push(appointment);
-				doctor.save();
-				req.flash("success","Appointment Added Successfully");
-				res.redirect("/doctorhome/date/"+new Date(req.body.appointmentdate).getTime());
-			}
-		 });
-		}
-	});
- });
 
- app.post("/signin",nouser, passport.authenticate("user", 
- {
-	 successRedirect: "/",
-	 failureRedirect: "/signin"
- }), function(req, res){
+app.post("/doctors/:id/bookappointment", isLoggedIn, ispatient, function (req, res) {
+	user.findById(req.params.id, function (err, doctor) {
+		if (err || !doctor) {
+			req.flash("error", "An Error Occured!! Please Try Again");
+			res.redirect("back");
+		} else {
+			appointment.create({
+				patientname: req.user.fname,
+				doctorname: doctor.fname,
+				patientcn: req.user.contactnumber,
+				doctorcn: doctor.contactnumber,
+				appointmentdate: req.body.appointmentdate,
+				doctorid: doctor._id,
+				patientid: req.user._id
+			}, function (err, appointment) {
+				if (err || !appointment) {
+					req.flash("error", "An Error Occured!! Please Try Again");
+					res.redirect("back");
+				} else {
+					appointment.save();
+					doctor.appointments.push(appointment);
+					doctor.save();
+					req.user.appointments.push(appointment);
+					req.user.save();
+					req.flash("success", "Your Appointment Request Has Been Sent .Please Wait For Confirmation");
+					res.redirect("/patienthome");
+				}
+			});
+		}
+	});
 });
+
+app.get("/doctors/:id/bookappointment/:appointmentdate", isLoggedIn, ispatient, function (req, res) {
+	user.findById(req.params.id, function (err, doctor) {
+		if (err || !doctor) {
+			req.flash("error", "An Error Occured!! Please Try Again");
+			res.redirect("back");
+		} else {
+			appointment.create({
+				patientname: req.user.fname,
+				doctorname: doctor.fname,
+				patientcn: req.user.contactnumber,
+				doctorcn: doctor.contactnumber,
+				appointmentdate: new Date(req.params.appointmentdate),
+				doctorid: doctor._id,
+				patientid: req.user._id
+			}, function (err, appointment) {
+				if (err || !appointment) {
+					console.log(err);
+					req.flash("error", "An Error Occured!! Please Try Again");
+					res.redirect("back");
+				} else {
+					appointment.save();
+					doctor.appointments.push(appointment);
+					doctor.save();
+					req.user.appointments.push(appointment);
+					req.user.save();
+					req.flash("success", "Your Appointment Request Has Been Sent .Please Wait For Confirmation");
+					res.redirect("/patienthome");
+				}
+			});
+		}
+	});
+});
+
+app.post("/addappointment", isLoggedIn, isdoctor, function (req, res) {
+	user.findById(req.user.id, function (err, doctor) {
+		if (err || !doctor) {
+			req.flash("error", "An Error Occured!! Please Try Again");
+			res.redirect("back");
+		} else {
+			appointment.create({
+				patientname: req.sanitize(req.body.patientname),
+				doctorname: doctor.fname,
+				patientcn: req.sanitize(req.body.patientcn),
+				doctorcn: doctor.contactnumber,
+				appointmentdate: req.body.appointmentdate,
+				doctorid: doctor._id
+			}, function (err, appointment) {
+				if (err || !appointment) {
+					req.flash("error", "An Error Occured!! Please Try Again");
+					res.redirect("back");
+				} else {
+					appointment.save();
+					doctor.appointments.push(appointment);
+					doctor.save();
+					req.flash("success", "Appointment Added Successfully");
+					res.redirect("/doctorhome/date/" + new Date(req.body.appointmentdate).getTime());
+				}
+			});
+		}
+	});
+});
+
+app.post("/signin", nouser, passport.authenticate("user", {
+	successRedirect: "/",
+	failureRedirect: "/signin"
+}), function (req, res) {});
 
 //  app.post("/signin",nouser, passport.authenticate("user"), function(req, res){
 // 	 if(req.isAuthenticated){
@@ -837,97 +845,120 @@ app.post("/addappointment",isLoggedIn,isdoctor, function(req, res){
 // 	 }
 // });
 
-app.get("/doctorhome/:id",isLoggedIn,isdoctor, function(req, res){
-	var pm = { id : req.params.id };
-	appointment.findById(req.params.id,function(err, foundappointment){
-        if(err||!foundappointment){
-            req.flash("error","Appointment Not Found");
+app.get("/doctorhome/:id", isLoggedIn, isdoctor, function (req, res) {
+	var pm = {
+		id: req.params.id
+	};
+	appointment.findById(req.params.id, function (err, foundappointment) {
+		if (err || !foundappointment) {
+			req.flash("error", "Appointment Not Found");
 			res.redirect("back");
-        } else {
-            res.render("appointmentdetails", {appointment: foundappointment,pm : pm });
-        }
-    });
+		} else {
+			res.render("appointmentdetails", {
+				appointment: foundappointment,
+				pm: pm
+			});
+		}
+	});
 });
 
-app.post("/doctorhome/:id",isLoggedIn,isdoctor, function(req, res){
-	appointment.findById(req.params.id,function(err, foundappointment){
-        if(err||!foundappointment){
-            req.flash("error","Appointment Not Found");
-				res.redirect("back");
-        } else {
-			if(req.body.status=="C")
-			{
-				foundappointment.status="C";
-				foundappointment.time=req.sanitize(req.body.time);
-				foundappointment.save();
-				req.flash("success","Appointment Details Updated");
-				res.redirect("back");
-			}
-			if(req.body.status=="R")
-			{
-				foundappointment.status="R";
-				foundappointment.save();
-				user.findById(req.user.id,function(err, founddoctor){
-       				 if(err){
-           				 console.log(err);
-       					 } else {
-						  founddoctor.appointments.pop(foundappointment);
-						  founddoctor.save();
-						  req.flash("success","Appointment Details Updated");
-						  res.redirect("back");
-       					 }
-   					 });
-			}
-			if(req.body.status=="CNF")
-			{
-				foundappointment.status="CNF";
-				foundappointment.description=req.sanitize(req.body.description);
-				foundappointment.prescription=req.sanitize(req.body.prescription);
-				foundappointment.billamount=req.sanitize(req.body.billamount);
-				foundappointment.save();
-				req.flash("success","Appointment Details Updated");
-				res.redirect("back");
-			}
-        }
-    });
-});
-
-app.get("/patienthome/:id",isLoggedIn,ispatient, function(req, res){
-	appointment.findById(req.params.id,function(err, foundappointment){
-        if(err||!foundappointment){
-            req.flash("error","Appointment Not Found");
+app.post("/doctorhome/:id", isLoggedIn, isdoctor, async function (req, res) {
+	appointment.findById(req.params.id, function (err, foundappointment) {
+		if (err || !foundappointment) {
+			req.flash("error", "Appointment Not Found");
 			res.redirect("back");
-        } else {
-            res.render("adp", {appointment: foundappointment });
-        }
-    });
+		} else {
+			if (req.body.status == "C") {
+				foundappointment.status = "C";
+				foundappointment.time = req.sanitize(req.body.time);
+				foundappointment.save();
+				req.flash("success", "Appointment Details Updated");
+				res.redirect("back");
+			}
+			if (req.body.status == "R") {
+				foundappointment.status = "R";
+				foundappointment.save();
+				user.findById(req.user.id, function (err, founddoctor) {
+					if (err) {
+						console.log(err);
+					} else {
+						founddoctor.appointments.pop(foundappointment);
+						founddoctor.save();
+						req.flash("success", "Appointment Details Updated");
+						res.redirect("back");
+					}
+				});
+			}
+			if (req.body.status == "CNF") {
+				foundappointment.status = "CNF";
+				foundappointment.description = req.sanitize(req.body.description);
+				foundappointment.prescription = req.sanitize(req.body.prescription);
+				foundappointment.billamount = req.sanitize(req.body.billamount);
+				foundappointment.save();
+				req.flash("success", "Appointment Details Updated");
+				res.redirect("back");
+			}
+		}
+	});
 });
 
-app.get("/videoCall/:id",isLoggedIn,function(req, res){
-	res.render("videoCall",{id:req.params.id});
+app.get("/patienthome/:id", isLoggedIn, ispatient, async function (req, res) {
+	appointment.findById(req.params.id, function (err, foundappointment) {
+		if (err || !foundappointment) {
+			req.flash("error", "Appointment Not Found");
+			res.redirect("back");
+		} else {
+			if (foundappointment.prescription)
+				Promise.all(foundappointment.prescription.split(",").map((prescription) => fetch(`https://pharmeasy.in/api/search/search/?intent_id=1610822855978&page=1&q=${prescription}`)))
+				.then((meds) => Promise.all(meds.map((med) => med.json())))
+				.then((meds) => meds.map(({
+					data: {
+						products
+					}
+				})=>products[0]))
+				.then((products)=>console.log(products))
+				.then((products) =>)
+				.catch(err => console.log(err));
+			res.render("adp", {
+				appointment: foundappointment
+			});
+		}
+	});
 });
 
-app.post('/chatBot', express.json(), (req, res)=>{
-    const agent = new dfff.WebhookClient({
-        request : req,
-        response : res
-    });
-    async function getDoctorDetails(agent){
+app.get("/videoCall/:id", isLoggedIn, function (req, res) {
+	res.render("videoCall", {
+		id: req.params.id
+	});
+});
+
+app.post('/chatBot', express.json(), (req, res) => {
+	const agent = new dfff.WebhookClient({
+		request: req,
+		response: res
+	});
+	async function getDoctorDetails(agent) {
 		const resp = await geocode(agent.context.get("location").parameters["location.original"]);
 		const location = {
 			x: resp.candidates[0].location.x,
 			y: resp.candidates[0].location.y
 		}
-		var doctors = (await user.find({type:"doctor"})).sort(function (a, b) {
-			return ((Number(a.loc.x)-Number(location.x))**2+(Number(a.loc.y)-Number(location.y))**2)**0.5
-			- ((Number(b.loc.x)-Number(location.x))**2+(Number(b.loc.y)-Number(location.y))**2)**0.5;
-		}).splice(0,5);
-		const response = await fetch('http://17449d3d4d72.ngrok.io/predictdisease', {
+		var doctors = (await user.find({
+			type: "doctor"
+		})).sort(function (a, b) {
+			return ((Number(a.loc.x) - Number(location.x)) ** 2 + (Number(a.loc.y) - Number(location.y)) ** 2) ** 0.5 -
+				((Number(b.loc.x) - Number(location.x)) ** 2 + (Number(b.loc.y) - Number(location.y)) ** 2) ** 0.5;
+		}).splice(0, 5);
+		const response = await fetch('http://742a07d9f3b6.ngrok.io/predictdisease', {
 			method: 'POST',
-			body:    JSON.stringify({symptoms:agent.context.get("symptoms").parameters["symptoms"].map(symptom=>symptom.split(" ").join("_"))}),
-			headers: { 'Content-Type': 'application/json' }
+			body: JSON.stringify({
+				symptoms: agent.context.get("symptoms").parameters["symptoms"].map(symptom => symptom.split(" ").join("_"))
+			}),
+			headers: {
+				'Content-Type': 'application/json'
+			}
 		});
-		try{
+		try {
 			const res = await response.json();
 			console.log(res);
 			var payloadData = {
@@ -937,22 +968,22 @@ app.post('/chatBot', express.json(), (req, res)=>{
 						"title": `You might suffering from ${res.result}.
 							We have found the following doctors nearest to your location best treating the disease you are suffering from`,
 					}],
-					[...doctors.map(doctor=>{
+					[...doctors.map(doctor => {
 						return {
-						"type": "accordion",
-						"title": doctor.fname,
-						"subtitle": doctor.lname,
-						"image": {
-							"src": {
-							"rawUrl": doctor.image
-							}
-						},
-						"text": doctor.description
+							"type": "accordion",
+							"title": doctor.fname,
+							"subtitle": doctor.lname,
+							"image": {
+								"src": {
+									"rawUrl": doctor.image
+								}
+							},
+							"text": doctor.description
 						}
 					})]
 				]
 			}
-		} catch(err) {
+		} catch (err) {
 			console.log(err);
 			var payloadData = {
 				"richContent": [
@@ -963,28 +994,34 @@ app.post('/chatBot', express.json(), (req, res)=>{
 				]
 			}
 		}
-		agent.add(new dfff.Payload(agent.UNSPECIFIED, payloadData, {sendAsMessage: true, rawPayload: true }))
+		agent.add(new dfff.Payload(agent.UNSPECIFIED, payloadData, {
+			sendAsMessage: true,
+			rawPayload: true
+		}))
 	}
-	
-	async function shoWDoctorsTiming(agent){
-		try{
-			var doctor = await user.findOne({type:"doctor",fname:agent.context.get("given-name").parameters["given-name"]});
+
+	async function shoWDoctorsTiming(agent) {
+		try {
+			var doctor = await user.findOne({
+				type: "doctor",
+				fname: agent.context.get("given-name").parameters["given-name"]
+			});
 			var payloadData = {
 				"richContent": [
 					[{
 						"type": "info",
 						"title": "The available timings are: ",
 					}],
-					[...doctor.schedule.map(schedule=>{
+					[...doctor.schedule.map(schedule => {
 						return {
-						"type": "accordion",
-						"title": `${schedule.day} ${schedule.from}:00 - ${schedule.to}:00`,
+							"type": "accordion",
+							"title": `${schedule.day} ${schedule.from}:00 - ${schedule.to}:00`,
 						}
 					})],
 				]
 			}
 			console.log(agent.context.get("given-name"));
-		} catch(err) {
+		} catch (err) {
 			console.log(err);
 			var payloadData = {
 				"richContent": [
@@ -995,30 +1032,33 @@ app.post('/chatBot', express.json(), (req, res)=>{
 				]
 			}
 		}
-        agent.add(new dfff.Payload(agent.UNSPECIFIED, payloadData, {sendAsMessage: true, rawPayload: true })) 
+		agent.add(new dfff.Payload(agent.UNSPECIFIED, payloadData, {
+			sendAsMessage: true,
+			rawPayload: true
+		}))
 	}
-	async function bookappointment(agent){
-		try{
-			var doctor = await user.findOne({type:"doctor",fname:agent.context.get("given-name").parameters["given-name"]});
+	async function bookappointment(agent) {
+		try {
+			var doctor = await user.findOne({
+				type: "doctor",
+				fname: agent.context.get("given-name").parameters["given-name"]
+			});
 			console.log(agent.context.get("date-time").parameters["date-time"]);
 			var payloadData = {
 				"richContent": [
-				[
-					{
-					"type": "info",
-					"title": "Click here to send Booking request",
-					"image": {
-						"src": {
-						"rawUrl": "https://example.com/images/logo.png"
-						}
-					},
-					"actionLink": `/doctors/${doctor._id}/bookappointment/${agent.context.get("date-time").parameters["date-time"].date_time}`
-					}
-				]
+					[{
+						"type": "info",
+						"title": "Click here to send Booking request",
+						"image": {
+							"src": {
+								"rawUrl": "https://example.com/images/logo.png"
+							}
+						},
+						"actionLink": `/doctors/${doctor._id}/bookappointment/${agent.context.get("date-time").parameters["date-time"].date_time}`
+					}]
 				]
 			}
-		}
-		catch(err){
+		} catch (err) {
 			console.log(err);
 			var payloadData = {
 				"richContent": [
@@ -1029,209 +1069,247 @@ app.post('/chatBot', express.json(), (req, res)=>{
 				]
 			}
 		}
-		agent.add(new dfff.Payload(agent.UNSPECIFIED, payloadData, {sendAsMessage: true, rawPayload: true })) 
+		agent.add(new dfff.Payload(agent.UNSPECIFIED, payloadData, {
+			sendAsMessage: true,
+			rawPayload: true
+		}))
 	}
 	async function diet(agent) {
-	try{
-		var info = agent.context.get("phys_exercise").parameters["phys_exercise"];
-		var requestBody = {
-		name: "Mehdi",
-		weight: agent.context.get("weight").parameters["weight"],
-		height: agent.context.get("height").parameters["height"],
-		age: agent.context.get("age").parameters["age"],
-		gender: agent.context.get("gender").parameters["gender"],
-		physical_activity: info,
-		};
+		try {
+			var info = agent.context.get("phys_exercise").parameters["phys_exercise"];
+			var requestBody = {
+				name: "Mehdi",
+				weight: agent.context.get("weight").parameters["weight"],
+				height: agent.context.get("height").parameters["height"],
+				age: agent.context.get("age").parameters["age"],
+				gender: agent.context.get("gender").parameters["gender"],
+				physical_activity: info,
+			};
 
-		console.log(requestBody);
-		var responseData;
+			console.log(requestBody);
+			var responseData;
 
-		const response = await fetch("http://17449d3d4d72.ngrok.io/suggestdiet", {
-		method: "POST",
-		body: JSON.stringify(requestBody),
-		headers: { "Content-Type": "application/json" },
-		});
-		const json = await response.json();
-		console.log(json);
-		var payloadData = {
-		richContent: [
-			[
-			{
-				type: "info",
-				title: "Your recommended diet plan is: ",
-			},
-			],
-			[
-			{
-				type: "list",
-				title: "Breakfast",
-				subtitle: json["breakfast"],
-				event: {
-				name: "",
-				languageCode: "",
-				parameters: {},
+			const response = await fetch("http://742a07d9f3b6.ngrok.io/suggestdiet", {
+				method: "POST",
+				body: JSON.stringify(requestBody),
+				headers: {
+					"Content-Type": "application/json"
 				},
-			},
-			{
-				type: "divider",
-			},
-			{
-				type: "list",
-				title: "Snack 1",
-				subtitle: json["snack1"],
-				event: {
-				name: "",
-				languageCode: "",
-				parameters: {},
-				},
-			},
-			{
-				type: "divider",
-			},
-			{
-				type: "list",
-				title: "Lunch",
-				subtitle: json["lunch"],
-				event: {
-				name: "",
-				languageCode: "",
-				parameters: {},
-				},
-			},
-			{
-				type: "divider",
-			},
-			{
-				type: "list",
-				title: "Snack 2",
-				subtitle: json["snack2"],
-				event: {
-				name: "",
-				languageCode: "",
-				parameters: {},
-				},
-			},
-			{
-				type: "divider",
-			},
-			{
-				type: "list",
-				title: "Dinner",
-				subtitle: json["dinner"],
-				event: {
-				name: "",
-				languageCode: "",
-				parameters: {},
-				},
-			},
-			{
-				type: "divider",
-			},
-			{
-				type: "list",
-				title: "Snack 3",
-				subtitle: json["snack3"],
-				event: {
-				name: "",
-				languageCode: "",
-				parameters: {},
-				},
-			},
-			],
-		],
-		};
-	}
-	catch(err){
-		console.log(err);
-		var payloadData = {
-			"richContent": [
-				[{
-					"type": "info",
-					"title": `I couldn't understand you.'`,
-				}]
-			]
+			});
+			const json = await response.json();
+			console.log(json);
+			var payloadData = {
+				richContent: [
+					[{
+						type: "info",
+						title: "Your recommended diet plan is: ",
+					}, ],
+					[{
+							type: "list",
+							title: "Breakfast",
+							subtitle: json["breakfast"],
+							event: {
+								name: "",
+								languageCode: "",
+								parameters: {},
+							},
+						},
+						{
+							type: "divider",
+						},
+						{
+							type: "list",
+							title: "Snack 1",
+							subtitle: json["snack1"],
+							event: {
+								name: "",
+								languageCode: "",
+								parameters: {},
+							},
+						},
+						{
+							type: "divider",
+						},
+						{
+							type: "list",
+							title: "Lunch",
+							subtitle: json["lunch"],
+							event: {
+								name: "",
+								languageCode: "",
+								parameters: {},
+							},
+						},
+						{
+							type: "divider",
+						},
+						{
+							type: "list",
+							title: "Snack 2",
+							subtitle: json["snack2"],
+							event: {
+								name: "",
+								languageCode: "",
+								parameters: {},
+							},
+						},
+						{
+							type: "divider",
+						},
+						{
+							type: "list",
+							title: "Dinner",
+							subtitle: json["dinner"],
+							event: {
+								name: "",
+								languageCode: "",
+								parameters: {},
+							},
+						},
+						{
+							type: "divider",
+						},
+						{
+							type: "list",
+							title: "Snack 3",
+							subtitle: json["snack3"],
+							event: {
+								name: "",
+								languageCode: "",
+								parameters: {},
+							},
+						},
+					],
+				],
+			};
+		} catch (err) {
+			console.log(err);
+			var payloadData = {
+				"richContent": [
+					[{
+						"type": "info",
+						"title": `I couldn't understand you.'`,
+					}]
+				]
+			}
 		}
+
+		agent.add(
+			new dfff.Payload(agent.UNSPECIFIED, payloadData, {
+				sendAsMessage: true,
+				rawPayload: true,
+			})
+		);
 	}
-    
-    agent.add(
-      new dfff.Payload(agent.UNSPECIFIED, payloadData, {
-        sendAsMessage: true,
-        rawPayload: true,
-      })
-    );
-  }
-  function defaultFallback(agent) {
-    agent.add(
-      "Sorry! I am unable to understand this at the moment. I am still learning humans. You can pick any of the service that might help me."
-    );
-  }
-  var intentMap = new Map();
-  intentMap.set("add_location", getDoctorDetails);
-    intentMap.set("show_doctors_timing", shoWDoctorsTiming);
+
+	async function covid(agent) {
+		try {
+			const response = await fetch(`https://api.covid19api.com/live/country/${country}`)
+			console.log(response);
+			var payloadData = {
+				"richContent": [
+					[{
+						"type": response.Country,
+						"title": "Description title",
+						"text": [
+							response.Confirmed,
+							response.Deaths
+						]
+					}]
+				]
+			}
+		} catch (err) {
+			console.log(err);
+			var payloadData = {
+				"richContent": [
+					[{
+						"type": "info",
+						"title": `I couldn't understand you.'`,
+					}]
+				]
+			}
+		}
+		agent.add(
+			new dfff.Payload(agent.UNSPECIFIED, payloadData, {
+				sendAsMessage: true,
+				rawPayload: true,
+			})
+		);
+	}
+
+	function defaultFallback(agent) {
+		agent.add(
+			"Sorry! I am unable to understand this at the moment. I am still learning humans. You can pick any of the service that might help me."
+		);
+	}
+	var intentMap = new Map();
+	intentMap.set("add_location", getDoctorDetails);
+	intentMap.set("show_doctors_timing", shoWDoctorsTiming);
 	intentMap.set("confirm_time", bookappointment);
 	intentMap.set("ask physical exercise", diet);
 	intentMap.set("Default Fallback Intent", defaultFallback);
+	intentMap.set("Covid", covid);
 	agent.handleRequest(intentMap);
 });
 
-app.get("/*", function(req, res){
-	req.flash("error","Error 404! The page you are looking for is not found.");
+app.get("/*", function (req, res) {
+	req.flash("error", "Error 404! The page you are looking for is not found.");
 	res.redirect("/");
 });
 
-function isLoggedIn(req, res, next){
-    if(req.isAuthenticated()){
-        return next();
-	}
-	req.flash("error","You Need To Login To Perform That");
-    res.redirect("/signin");
-}
-
-function nouser(req, res, next){
-    if(!req.user){
-        return next();
-	}
-	req.flash("error","You Need To Log Out First");
-    res.redirect("back");
-}
-
-function isdoctor(req, res, next){
-		if(req.user.type=="doctor"){
-        return next();
-	}
-	req.flash("info","Only Doctors Can Access That Page");
-    res.redirect("back");
-}
-
-function nodoctordes(req, res, next){
-		if(req.user.type=="doctor"&&!req.user.description){
-        return next();
-	}
-	req.flash("info","You Already Have Filled Description");
-    res.redirect("back");
-}
-
-function ispatient(req, res, next){
-		if(req.user.type=="patient"){
+function isLoggedIn(req, res, next) {
+	if (req.isAuthenticated()) {
 		return next();
 	}
-	req.flash("info","Only Doctors Can Access That Page");
-    res.redirect("back");
+	req.flash("error", "You Need To Login To Perform That");
+	res.redirect("/signin");
 }
 
-function isadmin(req, res, next){
-	if(req.user.type=="admin"){
-	return next();
+function nouser(req, res, next) {
+	if (!req.user) {
+		return next();
+	}
+	req.flash("error", "You Need To Log Out First");
+	res.redirect("back");
 }
-req.flash("info","Only Admins Can Access That Page");
-res.redirect("back");
+
+function isdoctor(req, res, next) {
+	if (req.user.type == "doctor") {
+		return next();
+	}
+	req.flash("info", "Only Doctors Can Access That Page");
+	res.redirect("back");
+}
+
+function nodoctordes(req, res, next) {
+	if (req.user.type == "doctor" && !req.user.description) {
+		return next();
+	}
+	req.flash("info", "You Already Have Filled Description");
+	res.redirect("back");
+}
+
+function ispatient(req, res, next) {
+	if (req.user.type == "patient") {
+		return next();
+	}
+	req.flash("info", "Only Doctors Can Access That Page");
+	res.redirect("back");
+}
+
+function isadmin(req, res, next) {
+	if (req.user.type == "admin") {
+		return next();
+	}
+	req.flash("info", "Only Admins Can Access That Page");
+	res.redirect("back");
 }
 
 function escapeRegex(text) {
-    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+	return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
 };
 
-app.listen(process.env.PORT||3000, function(){
+app.listen(process.env.PORT || 3000, function () {
 	console.log("The Clinicapp Server Has Started!");
 });
 

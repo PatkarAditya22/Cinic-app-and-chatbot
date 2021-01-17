@@ -1212,12 +1212,11 @@ app.post('/chatBot', express.json(), (req, res) => {
 	}
 
 	async function covid(agent) {
+		var response;
 		try {
 			var country = agent.context.get('country').parameters['country'];
-			var response;
-			fetch(`https://api.covid19api.com/live/country/${country}`).then((res)=>{
-				return res.json();
-			}).then(console.log)
+			response = await fetch(`https://api.covid19api.com/live/country/${country}`);
+			response = await response.json();
 			var payloadData = {
 				"richContent": [
 					[{

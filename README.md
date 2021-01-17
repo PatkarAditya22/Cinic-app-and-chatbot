@@ -10,4 +10,8 @@ npm install
 node app.js
 ```
 
-###Link to the Project Video: [GitHub](https://youtu.be/mKuSS_M2EzI)
+### Link to the Project Video:   [https://youtu.be/mKuSS_M2EzI](https://youtu.be/mKuSS_M2EzI)
+
+### Link to the Powerpoint presentation :
+
+

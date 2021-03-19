@@ -208,8 +208,9 @@ app.use(function (req, res, next) {
 });
 
 app.get("/", async function (req, res) {
-	let response = await fetch("https://newsapi.org/v2/everything?q=COVID&from=2020-12-30&sortBy=publishedAt&apiKey=452748674a1945a99d99275e720f6c5c&pageSize=30&page=2&language=en");
+	let response = await fetch("https://newsapi.org/v2/everything?q=COVID&from=2021-02-25&sortBy=publishedAt&apiKey=452748674a1945a99d99275e720f6c5c&pageSize=30&page=2&language=en");
 	response = await response.json();
+	console.log(response);
 	res.render("homepage",{response:response.articles});
 });
 
@@ -911,7 +912,7 @@ app.get("/patienthome/:id", isLoggedIn, ispatient, async function (req, res) {
 			res.redirect("back");
 		} else {
 			if (foundappointment.prescription)
-				Promise.all(foundappointment.prescription.split(",").map((prescription) => fetch(`https://pharmeasy.in/api/search/search/?intent_id=1610822855978&page=1&q=${prescription}`)))
+				Promise.all(foundappointment.prescription.split(",").map((prescription) => fetch(`https://pharmeasy.in/api/search/search/?intent_id=1610822855978&page=1&q=${homepage}`)))
 				.then((meds) => Promise.all(meds.map((med) => med.json())))
 				.then((meds) => meds.map(({
 					data: {
